@@ -1,0 +1,21 @@
+from rest_framework import serializers
+from .models import Snippet
+from django.contrib.auth.models import User
+
+
+# Create your models here.
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'snippets']
+
+
+class SnippetSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Snippet
+        fields = ['id','owner', 'title', 'code', 'time']
